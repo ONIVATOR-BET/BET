@@ -3,137 +3,1579 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sandarbha Sapkota - Civil Engineer</title>
-    <link rel="stylesheet" href="css.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>ONIVATOR - Advanced Aviator Crash Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow-x: hidden;
+        }
+        
+        .aviator-gradient {
+            background: linear-gradient(45deg, #ff6b35, #ff8e53, #ffb84d);
+        }
+        
+        .game-container {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border: 2px solid #ff6b35;
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+        }
+        
+        .plane {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff6b35;
+            transition: all 0.1s ease;
+            z-index: 10;
+        }
+        
+        .multiplier-display {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #ff6b35;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .crash-effect {
+            animation: crash 0.5s ease-out;
+        }
+        
+        @keyframes crash {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.5) rotate(180deg); }
+            100% { transform: scale(0) rotate(360deg); }
+        }
+        
+        .bet-button {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bet-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        .cashout-button {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cashout-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .trail {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6b35;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: trail 0.5s ease-out forwards;
+        }
+        
+        @keyframes trail {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+        
+        .leaderboard-item {
+            background: rgba(255, 107, 53, 0.1);
+            border-left: 3px solid #ff6b35;
+            margin: 4px 0;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .chat-message {
+            background: rgba(52, 73, 94, 0.5);
+            border-radius: 8px;
+            padding: 6px 10px;
+            margin: 2px 0;
+            border-left: 2px solid #ff6b35;
+        }
+        
+        .game-stats {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid #ff6b35;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .control-panel {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border: 1px solid #ff6b35;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        input[type="number"], input[type="text"], input[type="email"], input[type="password"] {
+            background: rgba(52, 73, 94, 0.8);
+            border: 1px solid #ff6b35;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+        }
+        
+        .crashed {
+            color: #e74c3c !important;
+            animation: crashText 0.5s ease-out;
+        }
+        
+        @keyframes crashText {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .winning {
+            color: #2ecc71 !important;
+            animation: winText 1s ease-out;
+        }
+        
+        @keyframes winText {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #ff6b35;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: white;
+        }
+        
+        .tab {
+            display: none;
+        }
+        
+        .tab.active {
+            display: block;
+        }
+        
+        .tab-button {
+            background: rgba(52, 73, 94, 0.5);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .tab-button.active {
+            background: #ff6b35;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 10px 0;
+            background: rgba(52, 73, 94, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .payment-method.selected {
+            border: 2px solid #ff6b35;
+        }
+        
+        .payment-method img {
+            width: 40px;
+            margin-right: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .multiplier-display {
+                font-size: 2.5rem;
+            }
+            .plane {
+                font-size: 1.5rem;
+            }
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
 </head>
-<body>
-
-    <header>
-        <h1>Sandarbha Sapkota</h1>
-        <p>Professional Civil Engineer | Structural & Geotechnical Specialist</p>
-    </header>
-
-    <section class="container">
-        <div class="profile">
-            <img src="nim.jpg" alt="Sandarbha Sapkota">
-            <div class="info">
-                <p><strong>DOB:</strong> 2021-2-17</p>
-                <p><strong>Address:</strong> Gaindakot-12, Harkapur, Nawalparasi</p>
-                <p><strong>Email:</strong> sandarbhasapkota212@gmail.com</p>
-                <p><strong>Phone:</strong> 98145485302</p>
+<body class="min-h-screen text-white">
+    <!-- Auth Modals -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">Login</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block mb-2">Email</label>
+                    <input type="email" id="loginEmail" required class="w-full">
+                </div>
+                <div>
+                    <label class="block mb-2">Password</label>
+                    <input type="password" id="loginPassword" required class="w-full">
+                </div>
+                <button type="submit" class="aviator-gradient text-white px-4 py-2 rounded w-full font-bold">
+                    Login
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <span class="text-gray-400">Don't have an account? </span>
+                <a href="#" class="text-orange-500 hover:underline" onclick="showRegisterModal()">Register</a>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="content">
-        <div class="card">
-            <h2>Education</h2>
-            <p><strong>Bachelor's Degree in Civil Engineering</strong></p>
-            <p>Tribhuvan University, Nepal (2019 - 2023)</p>
-            <ul>
-                <li>Specialized in Structural Engineering & Urban Development</li>
-                <li>Studied Advanced Construction Techniques & Earthquake Engineering</li>
-                <li>Research on Soil Stabilization & Foundation Strengthening</li>
-            </ul>
-
-            <p><strong>Master's Degree (Ongoing)</strong></p>
-            <p>Specializing in Hydrology & Environmental Engineering</p>
-        </div>
-
-        <div class="card">
-            <h2>Skills & Expertise</h2>
-            <ul>
-                <li><strong>Structural Analysis & Design:</strong> STAAD.Pro, AutoCAD, ETABS</li>
-                <li><strong>Soil Mechanics & Geotechnical Engineering:</strong> Slope Stability Analysis</li>
-                <li><strong>Water Resource Management:</strong> Hydrology Modeling, Dams, Canals</li>
-                <li><strong>Construction Project Management:</strong> Cost Estimation, Risk Analysis</li>
-                <li><strong>Surveying & Land Development:</strong> GIS Mapping, GPS Surveying</li>
-                <li><strong>Building Information Modeling (BIM):</strong> Revit, SketchUp</li>
-                <li><strong>Software Proficiency:</strong> SAP2000, MATLAB, Microsoft Project</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Professional Experience</h2>
-            <p><strong>Site Engineer - ABC Construction Pvt. Ltd. (2022 - Present)</strong></p>
-            <ul>
-                <li>Supervised the construction of a 15-story commercial building in Kathmandu.</li>
-                <li>Managed site operations, ensuring compliance with safety & structural codes.</li>
-                <li>Worked closely with architects & contractors to optimize project execution.</li>
-            </ul>
-
-            <p><strong>Intern - Urban Infrastructure Development Project (2021)</strong></p>
-            <ul>
-                <li>Contributed to designing earthquake-resistant housing solutions.</li>
-                <li>Performed load calculations & structural integrity tests.</li>
-                <li>Conducted environmental impact assessments for urban planning.</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Projects</h2>
-            <p><strong>Earthquake-Resistant Building Design (2022)</strong></p>
-            <p>Designed and tested reinforced concrete structures using STAAD.Pro and SAP2000.</p>
-
-            <p><strong>Flood Risk Assessment in Rural Nepal (2021)</strong></p>
-            <p>Conducted hydrological surveys and proposed flood mitigation strategies.</p>
-
-            <p><strong>Cost-Efficient Road Pavement Design (2020)</strong></p>
-            <p>Developed a sustainable and cost-effective road model for rural communities.</p>
-        </div>
-
-        <div class="card">
-            <h2>Certifications & Training</h2>
-            <ul>
-                <li>Certified in Project Management for Civil Engineers - PMI Institute</li>
-                <li>AutoCAD & Revit Advanced Training - Autodesk</li>
-                <li>Safety & Disaster Management Training - UNDP</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Publications & Research</h2>
-            <p><strong>Research on Seismic Retrofitting Techniques (2021)</strong></p>
-            <p>Published in the Nepal Engineering Journal</p>
-
-            <p><strong>Analysis of Smart City Planning in Nepal (2022)</strong></p>
-            <p>Presented at the National Conference on Infrastructure Development</p>
-        </div>
-
-        <div class="card">
-            <h2>Awards & Achievements</h2>
-            <ul>
-                <li>Best Student Project Award (2022) - Civil Engineering Innovation Conference</li>
-                <li>Top Performer in Structural Engineering (2021) - Tribhuvan University</li>
-                <li>Recipient of Nepal Engineering Excellence Scholarship</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Professional Associations</h2>
-            <ul>
-                <li>Member of Nepal Engineers' Association (NEA)</li>
-                <li>Affiliated with the American Society of Civil Engineers (ASCE)</li>
-                <li>Active Contributor to Engineers Without Borders (EWB)</li>
-            </ul>
-        </div>
-
-        <div class="card contact">
-            <h2>Contact Me</h2>
-            <form id="contact-form">
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <textarea placeholder="Your Message" required></textarea>
-                <button type="submit">Send</button>
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">Register</h2>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label class="block mb-2">Username</label>
+                    <input type="text" id="registerUsername" required class="w-full">
+                </div>
+                <div>
+                    <label class="block mb-2">Email</label>
+                    <input type="email" id="registerEmail" required class="w-full">
+                </div>
+                <div>
+                    <label class="block mb-2">Password</label>
+                    <input type="password" id="registerPassword" required class="w-full">
+                </div>
+                <div>
+                    <label class="block mb-2">Confirm Password</label>
+                    <input type="password" id="registerConfirmPassword" required class="w-full">
+                </div>
+                <button type="submit" class="aviator-gradient text-white px-4 py-2 rounded w-full font-bold">
+                    Register
+                </button>
             </form>
+            <div class="mt-4 text-center">
+                <span class="text-gray-400">Already have an account? </span>
+                <a href="#" class="text-orange-500 hover:underline" onclick="showLoginModal()">Login</a>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <footer>
-     
+    <!-- Wallet Modal -->
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('walletModal')">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">Wallet</h2>
+            
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openTab('depositTab')">Deposit</button>
+                <button class="tab-button" onclick="openTab('withdrawTab')">Withdraw</button>
+                <button class="tab-button" onclick="openTab('transactionTab')">Transactions</button>
+            </div>
+            
+            <div id="depositTab" class="tab active">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-2">Amount ($)</label>
+                        <input type="number" id="depositAmount" min="10" value="50" class="w-full">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Payment Method</label>
+                        <div class="space-y-2">
+                            <div class="payment-method selected" onclick="selectPaymentMethod(this, 'crypto')">
+                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="Crypto">
+                                <span>Crypto (BTC, ETH, USDT)</span>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod(this, 'creditCard')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Credit Card">
+                                <span>Credit/Debit Card</span>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod(this, 'skrill')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/825/825454.png" alt="Skrill">
+                                <span>Skrill</span>
+                            </div>
+                            <div class="payment-method" onclick="selectPaymentMethod(this, 'neteller')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/825/825462.png" alt="Neteller">
+                                <span>Neteller</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="aviator-gradient text-white px-4 py-2 rounded w-full font-bold" onclick="processDeposit()">
+                        Deposit Now
+                    </button>
+                </div>
+            </div>
+            
+            <div id="withdrawTab" class="tab">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-2">Amount ($)</label>
+                        <input type="number" id="withdrawAmount" min="20" value="50" class="w-full">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Withdrawal Method</label>
+                        <div class="space-y-2">
+                            <div class="payment-method selected" onclick="selectWithdrawalMethod(this, 'crypto')">
+                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="Crypto">
+                                <span>Crypto Wallet</span>
+                            </div>
+                            <div class="payment-method" onclick="selectWithdrawalMethod(this, 'bank')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/263/263100.png" alt="Bank Transfer">
+                                <span>Bank Transfer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cryptoWithdrawDetails">
+                        <div>
+                            <label class="block mb-2">Wallet Address</label>
+                            <input type="text" id="cryptoAddress" placeholder="Enter your wallet address" class="w-full">
+                        </div>
+                    </div>
+                    <div id="bankWithdrawDetails" class="hidden">
+                        <div>
+                            <label class="block mb-2">Account Number</label>
+                            <input type="text" id="bankAccount" placeholder="Enter account number" class="w-full">
+                        </div>
+                        <div>
+                            <label class="block mb-2">Routing Number</label>
+                            <input type="text" id="bankRouting" placeholder="Enter routing number" class="w-full">
+                        </div>
+                    </div>
+                    <button class="aviator-gradient text-white px-4 py-2 rounded w-full font-bold" onclick="processWithdrawal()">
+                        Request Withdrawal
+                    </button>
+                </div>
+            </div>
+            
+            <div id="transactionTab" class="tab">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-600">
+                                <th class="text-left p-2">Date</th>
+                                <th class="text-left p-2">Type</th>
+                                <th class="text-left p-2">Amount</th>
+                                <th class="text-left p-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionHistory">
+                            <!-- Transactions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('profileModal')">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 text-orange-500">My Profile</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center text-2xl">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold" id="profileUsername">Username</div>
+                        <div class="text-sm text-gray-400" id="profileEmail">user@example.com</div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 space-y-4">
+                    <div>
+                        <label class="block mb-2">Change Password</label>
+                        <input type="password" id="currentPassword" placeholder="Current Password" class="w-full mb-2">
+                        <input type="password" id="newPassword" placeholder="New Password" class="w-full mb-2">
+                        <input type="password" id="confirmNewPassword" placeholder="Confirm New Password" class="w-full">
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2">Two-Factor Authentication</label>
+                        <div class="flex items-center">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" id="twoFactorEnabled" class="form-checkbox h-5 w-5 text-orange-500">
+                                <span class="ml-2">Enable 2FA</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="aviator-gradient text-white px-4 py-2 rounded w-full font-bold" onclick="updateProfile()">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-gray-900 border-b border-orange-500 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <h1 class="text-3xl font-bold text-orange-500">ONIVATOR</h1>
+                <span class="text-sm text-gray-400">Provably Fair Crash Game</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="authButtons" class="flex space-x-2">
+                    <button class="text-sm bg-orange-500 px-3 py-1 rounded hover:bg-orange-600" onclick="showLoginModal()">
+                        <i class="fas fa-sign-in-alt mr-1"></i>Login
+                    </button>
+                    <button class="text-sm bg-transparent border border-orange-500 px-3 py-1 rounded hover:bg-orange-500" onclick="showRegisterModal()">
+                        <i class="fas fa-user-plus mr-1"></i>Register
+                    </button>
+                </div>
+                <div id="userMenu" class="hidden flex items-center space-x-4">
+                    <div class="text-right">
+                        <div class="text-sm text-gray-400">Balance</div>
+                        <div class="text-xl font-bold text-green-400" id="balance">$0.00</div>
+                    </div>
+                    <div class="relative">
+                        <button class="flex items-center space-x-2" id="userMenuButton">
+                            <span id="usernameDisplay">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded shadow-lg hidden" id="userDropdown">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700" onclick="showWalletModal()">
+                                <i class="fas fa-wallet mr-2"></i>Wallet
+                            </a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700" onclick="showProfileModal()">
+                                <i class="fas fa-user mr-2"></i>Profile
+                            </a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700" onclick="showFairnessModal()">
+                                <i class="fas fa-shield-alt mr-2"></i>Provably Fair
+                            </a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700" onclick="logout()">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <button class="text-gray-400 hover:text-white" id="soundToggle">
+                    <i class="fas fa-volume-up text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+        <div id="gameContent" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <!-- Game Display -->
+                <div class="lg:col-span-3">
+                    <div class="game-container rounded-lg p-6 mb-4 relative overflow-hidden" style="height: 400px;">
+                        <canvas id="gameCanvas" class="absolute inset-0 w-full h-full"></canvas>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="multiplier-display" id="multiplier">1.00x</div>
+                        </div>
+                        <div class="plane" id="plane">✈️</div>
+                        <div class="absolute top-4 left-4 text-sm" id="gameState">Waiting for next round...</div>
+                        <div class="absolute top-4 right-4 text-sm" id="roundInfo">Round: #1</div>
+                    </div>
+
+                    <!-- Game Controls -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Manual Betting -->
+                        <div class="control-panel">
+                            <h3 class="text-lg font-bold mb-4 text-orange-500">Manual Bet</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm mb-2">Bet Amount</label>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="bg-gray-600 px-3 py-1 rounded" onclick="adjustBet(-10)">-10</button>
+                                        <button class="bg-gray-600 px-3 py-1 rounded" onclick="adjustBet(-1)">-1</button>
+                                        <input type="number" id="betAmount" value="10" min="1" class="flex-1 text-center">
+                                        <button class="bg-gray-600 px-3 py-1 rounded" onclick="adjustBet(1)">+1</button>
+                                        <button class="bg-gray-600 px-3 py-1 rounded" onclick="adjustBet(10)">+10</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm mb-2">Auto Cashout</label>
+                                    <input type="number" id="autoCashout" value="2.00" min="1.01" step="0.01" class="w-full">
+                                </div>
+                                <button class="bet-button w-full" id="betButton" onclick="placeBet()">
+                                    <i class="fas fa-coins mr-2"></i>BET
+                                </button>
+                                <button class="cashout-button w-full hidden" id="cashoutButton" onclick="cashOut()">
+                                    <i class="fas fa-hand-paper mr-2"></i>CASH OUT
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Auto Play -->
+                        <div class="control-panel">
+                            <h3 class="text-lg font-bold mb-4 text-orange-500">Auto Play</h3>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-sm mb-1">Number of Bets</label>
+                                        <input type="number" id="autoRounds" value="10" min="1" class="w-full">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm mb-1">Auto Cashout</label>
+                                        <input type="number" id="autoAutoCashout" value="2.00" min="1.01" step="0.01" class="w-full">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-sm mb-1">Stop on Win</label>
+                                        <input type="number" id="stopWin" value="100" min="1" class="w-full">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm mb-1">Stop on Loss</label>
+                                        <input type="number" id="stopLoss" value="50" min="1" class="w-full">
+                                    </div>
+                                </div>
+                                <button class="aviator-gradient text-white px-4 py-2 rounded w-full font-bold" id="autoPlayButton" onclick="toggleAutoPlay()">
+                                    <i class="fas fa-play mr-2"></i>START AUTO
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-4">
+                    <!-- Live Bets -->
+                    <div class="game-stats">
+                        <h3 class="text-lg font-bold mb-4 text-orange-500">Live Bets</h3>
+                        <div id="liveBets" class="space-y-2 max-h-40 overflow-y-auto">
+                            <!-- Live bets will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="game-stats">
+                        <h3 class="text-lg font-bold mb-4 text-orange-500">Statistics</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span>Total Bets:</span>
+                                <span id="totalBets">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Wins:</span>
+                                <span id="totalWins" class="text-green-400">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Losses:</span>
+                                <span id="totalLosses" class="text-red-400">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Win Rate:</span>
+                                <span id="winRate">0%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Total Profit:</span>
+                                <span id="totalProfit">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Multipliers -->
+                    <div class="game-stats">
+                        <h3 class="text-lg font-bold mb-4 text-orange-500">Recent Crashes</h3>
+                        <div id="recentCrashes" class="flex flex-wrap gap-2">
+                            <!-- Recent crashes will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Chat -->
+                    <div class="game-stats">
+                        <h3 class="text-lg font-bold mb-4 text-orange-500">Chat</h3>
+                        <div id="chatMessages" class="space-y-2 max-h-40 overflow-y-auto mb-2">
+                            <!-- Chat messages will be populated here -->
+                        </div>
+                        <div class="flex space-x-2">
+                            <input type="text" id="chatInput" placeholder="Type a message..." class="flex-1 px-2 py-1 text-sm">
+                            <button onclick="sendMessage()" class="bg-orange-500 px-3 py-1 rounded text-sm">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Betting History -->
+            <div class="mt-6 game-stats">
+                <h3 class="text-lg font-bold mb-4 text-orange-500">Betting History</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-600">
+                                <th class="text-left p-2">Round</th>
+                                <th class="text-left p-2">Bet</th>
+                                <th class="text-left p-2">Multiplier</th>
+                                <th class="text-left p-2">Cashout</th>
+                                <th class="text-left p-2">Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTable">
+                            <!-- History will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Content (shown when not logged in) -->
+        <div id="welcomeContent" class="flex flex-col items-center justify-center py-20">
+            <div class="text-center max-w-2xl">
+                <h1 class="text-5xl font-bold mb-6 text-orange-500">ONIVATOR</h1>
+                <p class="text-xl mb-8">The most exciting crash game experience with provably fair technology. Play, win, and withdraw your earnings instantly!</p>
+                
+                <div class="flex justify-center space-x-4">
+                    <button class="aviator-gradient text-white px-8 py-3 rounded-lg font-bold text-lg" onclick="showRegisterModal()">
+                        <i class="fas fa-user-plus mr-2"></i>Join Now
+                    </button>
+                    <button class="bg-transparent border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-lg font-bold text-lg hover:bg-orange-500 hover:text-white" onclick="showLoginModal()">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                </div>
+                
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gray-800 p-6 rounded-lg border border-orange-500">
+                        <div class="text-orange-500 text-3xl mb-4">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Provably Fair</h3>
+                        <p class="text-gray-400">Our algorithm ensures 100% fair gameplay with transparent verification.</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg border border-orange-500">
+                        <div class="text-orange-500 text-3xl mb-4">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Instant Withdrawals</h3>
+                        <p class="text-gray-400">Get your winnings instantly with multiple withdrawal options.</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg border border-orange-500">
+                        <div class="text-orange-500 text-3xl mb-4">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">24/7 Support</h3>
+                        <p class="text-gray-400">Our dedicated support team is always ready to assist you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Provably Fair Modal -->
+    <div id="fairnessModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('fairnessModal')">&times;</span>
+            <h3 class="text-xl font-bold mb-4 text-orange-500">Provably Fair</h3>
+            <div class="space-y-4 text-sm">
+                <div>
+                    <label class="block mb-1">Server Seed (SHA256):</label>
+                    <input type="text" id="serverSeed" readonly class="w-full bg-gray-700 p-2 rounded">
+                </div>
+                <div>
+                    <label class="block mb-1">Client Seed:</label>
+                    <input type="text" id="clientSeed" class="w-full bg-gray-700 p-2 rounded">
+                </div>
+                <div>
+                    <label class="block mb-1">Nonce:</label>
+                    <input type="text" id="nonce" readonly class="w-full bg-gray-700 p-2 rounded">
+                </div>
+                <div>
+                    <label class="block mb-1">Result:</label>
+                    <input type="text" id="fairResult" readonly class="w-full bg-gray-700 p-2 rounded">
+                </div>
+            </div>
+            <div class="flex space-x-4 mt-6">
+                <button onclick="generateNewSeeds()" class="bg-orange-500 px-4 py-2 rounded">New Seeds</button>
+                <button onclick="closeModal('fairnessModal')" class="bg-gray-600 px-4 py-2 rounded">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-orange-500 p-6 mt-10">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-orange-500 mb-4">ONIVATOR</h3>
+                    <p class="text-gray-400">The most exciting and fair crash game experience with instant withdrawals and 24/7 support.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500">Game</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500" onclick="showFairnessModal()">Provably Fair</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500">Responsible Gaming</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400"><i class="fas fa-envelope mr-2"></i> support@onivator.com</li>
+                        <li class="text-gray-400"><i class="fas fa-globe mr-2"></i> www.onivator.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
+                <p>© 2023 ONIVATOR. All rights reserved. 18+ only. Gambling can be addictive, please play responsibly.</p>
+            </div>
+        </div>
     </footer>
 
-    <script src="login.js"></script>
+    <script>
+        // User State
+        let userState = {
+            isAuthenticated: false,
+            username: '',
+            email: '',
+            balance: 0,
+            transactions: [],
+            gameHistory: []
+        };
+
+        // Game State
+        let gameState = {
+            currentBet: 0,
+            isPlaying: false,
+            multiplier: 1.00,
+            crashed: false,
+            crashPoint: 0,
+            roundNumber: 1,
+            autoPlay: false,
+            autoRoundsLeft: 0,
+            totalBets: 0,
+            totalWins: 0,
+            totalLosses: 0,
+            totalProfit: 0,
+            history: [],
+            recentCrashes: [],
+            soundEnabled: true,
+            serverSeed: '',
+            clientSeed: '',
+            nonce: 0
+        };
+
+        // DOM Elements
+        const balanceElement = document.getElementById('balance');
+        const multiplierElement = document.getElementById('multiplier');
+        const planeElement = document.getElementById('plane');
+        const gameStateElement = document.getElementById('gameState');
+        const roundInfoElement = document.getElementById('roundInfo');
+        const betButton = document.getElementById('betButton');
+        const cashoutButton = document.getElementById('cashoutButton');
+        const betAmountInput = document.getElementById('betAmount');
+        const autoCashoutInput = document.getElementById('autoCashout');
+        const autoPlayButton = document.getElementById('autoPlayButton');
+        const authButtons = document.getElementById('authButtons');
+        const userMenu = document.getElementById('userMenu');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const userDropdown = document.getElementById('userDropdown');
+        const userMenuButton = document.getElementById('userMenuButton');
+        const gameContent = document.getElementById('gameContent');
+        const welcomeContent = document.getElementById('welcomeContent');
+        const profileUsername = document.getElementById('profileUsername');
+        const profileEmail = document.getElementById('profileEmail');
+
+        // SHA256 Implementation
+        function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            return crypto.subtle.digest('SHA-256', msgBuffer).then(hashBuffer => {
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            });
+        }
+
+        // Provably Fair Algorithm
+        async function calculateCrashPoint(serverSeed, clientSeed, nonce) {
+            const combined = `${serverSeed}:${clientSeed}:${nonce}`;
+            const hash = await sha256(combined);
+            const hex = hash.substring(0, 8);
+            const num = parseInt(hex, 16);
+            const result = Math.max(1, (2 ** 32) / (num + 1));
+            return Math.floor(result * 100) / 100;
+        }
+
+        // Initialize Provably Fair
+        async function initializeProvablyFair() {
+            gameState.serverSeed = Array.from(crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, '0')).join('');
+            gameState.clientSeed = Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('');
+            gameState.nonce = 0;
+            updateFairnessModal();
+        }
+
+        // Update Fairness Modal
+        function updateFairnessModal() {
+            document.getElementById('serverSeed').value = gameState.serverSeed;
+            document.getElementById('clientSeed').value = gameState.clientSeed;
+            document.getElementById('nonce').value = gameState.nonce;
+        }
+
+        // Game Loop
+        async function startRound() {
+            gameState.crashed = false;
+            gameState.multiplier = 1.00;
+            gameState.nonce++;
+            gameState.crashPoint = await calculateCrashPoint(gameState.serverSeed, gameState.clientSeed, gameState.nonce);
+            
+            updateDisplay();
+            gameStateElement.textContent = 'Flying...';
+            
+            animatePlane();
+            const gameLoop = setInterval(() => {
+                if (gameState.crashed) {
+                    clearInterval(gameLoop);
+                    return;
+                }
+                
+                gameState.multiplier += 0.01;
+                
+                if (gameState.multiplier >= gameState.crashPoint) {
+                    crash();
+                    clearInterval(gameLoop);
+                }
+                
+                // Auto cashout check
+                if (gameState.currentBet > 0 && gameState.multiplier >= parseFloat(autoCashoutInput.value)) {
+                    cashOut();
+                }
+                
+                updateDisplay();
+            }, 100);
+        }
+
+        // Animate Plane
+        function animatePlane() {
+            const plane = document.getElementById('plane');
+            let position = 0;
+            const gameContainer = plane.parentElement;
+            const containerWidth = gameContainer.offsetWidth;
+            const containerHeight = gameContainer.offsetHeight;
+            
+            plane.style.left = '50px';
+            plane.style.bottom = '50px';
+            
+            const flyInterval = setInterval(() => {
+                if (gameState.crashed) {
+                    clearInterval(flyInterval);
+                    // Crash animation
+                    plane.classList.add('crash-effect');
+                    setTimeout(() => {
+                        plane.classList.remove('crash-effect');
+                        resetPlane();
+                    }, 500);
+                    return;
+                }
+                
+                position += 2;
+                const x = 50 + position;
+                const y = 50 + (position * 0.5);
+                
+                if (x < containerWidth - 50 && y < containerHeight - 50) {
+                    plane.style.left = x + 'px';
+                    plane.style.bottom = y + 'px';
+                    
+                    // Create trail effect
+                    createTrail(x, containerHeight - y);
+                }
+            }, 50);
+        }
+
+        // Create Trail Effect
+        function createTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.querySelector('.game-container').appendChild(trail);
+            
+            setTimeout(() => {
+                trail.remove();
+            }, 500);
+        }
+
+        // Reset Plane Position
+        function resetPlane() {
+            const plane = document.getElementById('plane');
+            plane.style.left = '50px';
+            plane.style.bottom = '50px';
+        }
+
+        // Crash Function
+        function crash() {
+            gameState.crashed = true;
+            multiplierElement.classList.add('crashed');
+            multiplierElement.textContent = 'CRASHED!';
+            
+            if (gameState.currentBet > 0) {
+                // Player lost
+                gameState.totalLosses++;
+                gameState.totalProfit -= gameState.currentBet;
+                addToHistory(gameState.roundNumber, gameState.currentBet, gameState.crashPoint, 0, -gameState.currentBet);
+                playSound('crash');
+            }
+            
+            gameState.recentCrashes.unshift(gameState.crashPoint.toFixed(2));
+            if (gameState.recentCrashes.length > 10) {
+                gameState.recentCrashes.pop();
+            }
+            
+            updateRecentCrashes();
+            updateStats();
+            
+            setTimeout(() => {
+                nextRound();
+            }, 3000);
+        }
+
+        // Place Bet
+        function placeBet() {
+            const betAmount = parseFloat(betAmountInput.value);
+            if (betAmount > userState.balance) {
+                alert('Insufficient balance!');
+                return;
+            }
+            
+            gameState.currentBet = betAmount;
+            userState.balance -= betAmount;
+            gameState.totalBets++;
+            
+            betButton.classList.add('hidden');
+            cashoutButton.classList.remove('hidden');
+            
+            updateDisplay();
+        }
+
+        // Cash Out
+        function cashOut() {
+            if (gameState.currentBet === 0 || gameState.crashed) return;
+            
+            const winAmount = gameState.currentBet * gameState.multiplier;
+            userState.balance += winAmount;
+            gameState.totalWins++;
+            gameState.totalProfit += (winAmount - gameState.currentBet);
+            
+            addToHistory(gameState.roundNumber, gameState.currentBet, gameState.multiplier, winAmount, winAmount - gameState.currentBet);
+            
+            multiplierElement.classList.add('winning');
+            playSound('cashout');
+            
+            setTimeout(() => {
+                multiplierElement.classList.remove('winning');
+            }, 1000);
+            
+            gameState.currentBet = 0;
+            betButton.classList.remove('hidden');
+            cashoutButton.classList.add('hidden');
+            
+            updateDisplay();
+            updateStats();
+        }
+
+        // Auto Play
+        function toggleAutoPlay() {
+            gameState.autoPlay = !gameState.autoPlay;
+            
+            if (gameState.autoPlay) {
+                gameState.autoRoundsLeft = parseInt(document.getElementById('autoRounds').value);
+                autoPlayButton.innerHTML = '<i class="fas fa-stop mr-2"></i>STOP AUTO';
+                autoPlayButton.classList.remove('aviator-gradient');
+                autoPlayButton.classList.add('bg-red-500');
+            } else {
+                autoPlayButton.innerHTML = '<i class="fas fa-play mr-2"></i>START AUTO';
+                autoPlayButton.classList.add('aviator-gradient');
+                autoPlayButton.classList.remove('bg-red-500');
+            }
+        }
+
+        // Next Round
+        function nextRound() {
+            gameState.roundNumber++;
+            gameState.currentBet = 0;
+            multiplierElement.classList.remove('crashed', 'winning');
+            
+            betButton.classList.remove('hidden');
+            cashoutButton.classList.add('hidden');
+            
+            gameStateElement.textContent = 'Place your bets...';
+            roundInfoElement.textContent = `Round: #${gameState.roundNumber}`;
+            
+            // Auto play logic
+            if (gameState.autoPlay && gameState.autoRoundsLeft > 0) {
+                setTimeout(() => {
+                    const betAmount = parseFloat(betAmountInput.value);
+                    if (betAmount <= userState.balance) {
+                        placeBet();
+                        autoCashoutInput.value = document.getElementById('autoAutoCashout').value;
+                    }
+                    gameState.autoRoundsLeft--;
+                    
+                    if (gameState.autoRoundsLeft === 0) {
+                        toggleAutoPlay();
+                    }
+                }, 1000);
+            }
+            
+            setTimeout(() => {
+                startRound();
+            }, 5000);
+        }
+
+        // Update Display
+        function updateDisplay() {
+            balanceElement.textContent = `$${userState.balance.toFixed(2)}`;
+            if (!gameState.crashed) {
+                multiplierElement.textContent = `${gameState.multiplier.toFixed(2)}x`;
+            }
+        }
+
+        // Update Statistics
+        function updateStats() {
+            document.getElementById('totalBets').textContent = gameState.totalBets;
+            document.getElementById('totalWins').textContent = gameState.totalWins;
+            document.getElementById('totalLosses').textContent = gameState.totalLosses;
+            
+            const winRate = gameState.totalBets > 0 ? (gameState.totalWins / gameState.totalBets * 100).toFixed(1) : 0;
+            document.getElementById('winRate').textContent = `${winRate}%`;
+            
+            const profitElement = document.getElementById('totalProfit');
+            profitElement.textContent = `$${gameState.totalProfit.toFixed(2)}`;
+            profitElement.className = gameState.totalProfit >= 0 ? 'text-green-400' : 'text-red-400';
+        }
+
+        // Add to History
+        function addToHistory(round, bet, multiplier, cashout, profit) {
+            const historyTable = document.getElementById('historyTable');
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-700';
+            
+            const profitClass = profit > 0 ? 'text-green-400' : 'text-red-400';
+            const cashoutText = cashout > 0 ? `$${cashout.toFixed(2)}` : 'CRASHED';
+            
+            row.innerHTML = `
+                <td class="p-2">#${round}</td>
+                <td class="p-2">$${bet.toFixed(2)}</td>
+                <td class="p-2">${multiplier.toFixed(2)}x</td>
+                <td class="p-2">${cashoutText}</td>
+                <td class="p-2 ${profitClass}">${profit > 0 ? '+' : ''}$${profit.toFixed(2)}</td>
+            `;
+            
+            historyTable.insertBefore(row, historyTable.firstChild);
+            
+            // Keep only last 20 entries
+            while (historyTable.children.length > 20) {
+                historyTable.removeChild(historyTable.lastChild);
+            }
+        }
+
+        // Update Recent Crashes
+        function updateRecentCrashes() {
+            const recentElement = document.getElementById('recentCrashes');
+            recentElement.innerHTML = '';
+            
+            gameState.recentCrashes.forEach(crash => {
+                const span = document.createElement('span');
+                const crashValue = parseFloat(crash);
+                span.className = `px-2 py-1 rounded text-xs ${crashValue < 2 ? 'bg-red-500' : crashValue < 10 ? 'bg-yellow-500' : 'bg-green-500'}`;
+                span.textContent = `${crash}x`;
+                recentElement.appendChild(span);
+            });
+        }
+
+        // Live Bets Simulation
+        function simulateLiveBets() {
+            const liveBetsElement = document.getElementById('liveBets');
+            const players = ['Player1', 'CryptoKing', 'BetMaster', 'LuckyOne', 'HighRoller'];
+            
+            setInterval(() => {
+                if (Math.random() < 0.3) { // 30% chance to add new bet
+                    const player = players[Math.floor(Math.random() * players.length)];
+                    const bet = (Math.random() * 100 + 10).toFixed(2);
+                    const multiplier = (Math.random() * 5 + 1).toFixed(2);
+                    
+                    const betDiv = document.createElement('div');
+                    betDiv.className = 'leaderboard-item text-xs';
+                    betDiv.innerHTML = `
+                        <div class="flex justify-between">
+                            <span>${player}</span>
+                            <span>$${bet} @ ${multiplier}x</span>
+                        </div>
+                    `;
+                    
+                    liveBetsElement.insertBefore(betDiv, liveBetsElement.firstChild);
+                    
+                    // Keep only last 10 bets
+                    while (liveBetsElement.children.length > 10) {
+                        liveBetsElement.removeChild(liveBetsElement.lastChild);
+                    }
+                }
+            }, 2000);
+        }
+
+        // Chat System
+        function sendMessage() {
+            if (!userState.isAuthenticated) {
+                alert('Please login to chat');
+                return;
+            }
+            
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            addChatMessage(userState.username, message);
+            chatInput.value = '';
+            
+            // Simulate responses
+            setTimeout(() => {
+                const responses = [
+                    'Good luck!',
+                    'Nice multiplier!',
+                    'I crashed too early...',
+                    'Going for 10x!',
+                    'Lets go!!!'
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                const players = ['Player1', 'CryptoKing', 'BetMaster'];
+                const randomPlayer = players[Math.floor(Math.random() * players.length)];
+                addChatMessage(randomPlayer, randomResponse);
+            }, 1000 + Math.random() * 3000);
+        }
+
+        function addChatMessage(username, message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message text-xs';
+            messageDiv.innerHTML = `<strong class="text-orange-400">${username}:</strong> ${message}`;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Keep only last 20 messages
+            while (chatMessages.children.length > 20) {
+                chatMessages.removeChild(chatMessages.firstChild);
+            }
+        }
+
+        // Chat input enter key
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Sound Effects
+        function playSound(type) {
+            if (!gameState.soundEnabled) return;
+            
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            if (type === 'cashout') {
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
+            } else if (type === 'crash') {
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.5);
+            }
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Sound Toggle
+        document.getElementById('soundToggle').addEventListener('click', function() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            this.innerHTML = gameState.soundEnabled ? 
+                '<i class="fas fa-volume-up text-xl"></i>' : 
+                '<i class="fas fa-volume-mute text-xl"></i>';
+        });
+
+        // Bet Adjustment
+        function adjustBet(amount) {
+            const currentBet = parseFloat(betAmountInput.value);
+            const newBet = Math.max(1, Math.min(userState.balance, currentBet + amount));
+            betAmountInput.value = newBet;
+        }
+
+        // Modal Functions
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function showRegisterModal() {
+            document.getElementById('registerModal').style.display = 'block';
+        }
+
+        function showWalletModal() {
+            document.getElementById('walletModal').style.display = 'block';
+            loadTransactionHistory();
+        }
+
+        function showProfileModal() {
+            profileUsername.textContent = userState.username;
+            profileEmail.textContent = userState.email;
+            document.getElementById('profileModal').style.display = 'block';
+        }
+
+        function showFairnessModal() {
+            document.getElementById('fairnessModal').style.display = 'block';
+            updateFairnessModal();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate corresponding button
+            const button = document.querySelector(`.tab-button[onclick="openTab('${tabId}')"]`);
+            if (button) {
+                button.classList.add('active');
+            }
+        }
+
+        // Payment Method Selection
+        function selectPaymentMethod(element, method) {
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function selectWithdrawalMethod(element, method) {
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            if (method === 'crypto') {
+                document.getElementById('cryptoWithdrawDetails').classList.remove('hidden');
+                document.getElementById('bankWithdrawDetails').classList.add('hidden');
+            } else {
+                document.getElementById('cryptoWithdrawDetails').classList.add('hidden');
+                document.getElementById('bankWithdrawDetails').classList.remove('hidden');
+            }
+        }
+
+        // Process Deposit
+        function processDeposit() {
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            if (amount < 10) {
+                alert('Minimum deposit is $10');
+                return;
+            }
+            
+            // Simulate deposit processing
+            setTimeout(() => {
+                userState.balance += amount;
+                userState.transactions.unshift({
+                    date: new Date().toLocaleString(),
+                    type: 'Deposit',
+                    amount: amount,
+                    status: 'Completed'
+                });
+                
+                updateDisplay();
+                loadTransactionHistory();
+                alert(`Successfully deposited $${amount.toFixed(2)}`);
+                closeModal('walletModal');
+            }, 1000);
+        }
+
+        // Process Withdrawal
+        function processWithdrawal() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            if (amount < 20) {
+                alert('Minimum withdrawal is $20');
+                return;
+            }
+            
+            if (amount > userState.balance) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            // Simulate withdrawal processing
+            setTimeout(() => {
+                userState.balance -= amount;
+                userState.transactions.unshift({
+                    date: new Date().toLocaleString(),
+                    type: 'Withdrawal',
+                    amount: amount,
+                    status: 'Pending'
+                });
+                
+                updateDisplay();
+                loadTransactionHistory();
+                alert(`Withdrawal request of $${amount.toFixed(2)} submitted. It will be processed within 24 hours.`);
+                closeModal('walletModal');
+            }, 1000);
+        }
+
+        // Load Transaction History
+        function loadTransactionHistory() {
+            const historyTable = document.getElementById('transactionHistory');
+            historyTable.innerHTML = '';
+            
+            userState.transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-700';
+                
+                const statusClass = transaction.status === 'Completed' ? 'text-green-400' : 
+                                  transaction.status === 'Pending' ? 'text-yellow-400' : 'text-red-400';
+                
+                row.innerHTML = `
+                    <td class="p-2">${transaction.date}</td>
+                    <td class="p-2">${transaction.type}</td>
+                    <td class="p-2">$${transaction.amount.toFixed(2)}</td>
+                    <td class="p-2 ${statusClass}">${transaction.status}</td>
+                `;
+                
+                historyTable.appendChild(row);
+            });
+        }
+
+        // Update Profile
+        function updateProfile() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            const twoFactorEnabled = document.getElementById('twoFactorEnabled').checked;
+            
+            if (newPassword && newPassword !== confirmNewPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+            
+            // In a real app, you would validate current password and update on server
+            alert('Profile updated successfully');
+            closeModal('profileModal');
+        }
+
+        // Generate New Seeds
+        function generateNewSeeds() {
+            initializeProvablyFair();
+        }
+
+        // Login Function
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simulate login - in a real app, this would be a server call
+            setTimeout(() => {
+                userState.isAuthenticated = true;
+                userState.username = 'Player' + Math.floor(Math.random() * 1000);
+                userState.email = email;
+                userState.balance = 1000;
+                userState.transactions = [{
+                    date: new Date().toLocaleString(),
+                    type: 'Deposit',
+                    amount: 1000,
+                    status: 'Completed'
+                }];
+                
+                // Update UI
+                authButtons.classList.add('hidden');
+                userMenu.classList.remove('hidden');
+                usernameDisplay.textContent = userState.username;
+                gameContent.classList.remove('hidden');
+                welcomeContent.classList.add('hidden');
+                
+                updateDisplay();
+                closeModal('loginModal');
+                
+                // Initialize game if not already
+                if (gameState.roundNumber === 1) {
+                    initGame();
+                }
+            }, 500);
+        });
+
+        // Register Function
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            // Simulate registration - in a real app, this would be a server call
+            setTimeout(() => {
+                userState.isAuthenticated = true;
+                userState.username = username;
+                userState.email = email;
+                userState.balance = 1000;
+                userState.transactions = [{
+                    date: new Date().toLocaleString(),
+                    type: 'Deposit',
+                    amount: 1000,
+                    status: 'Completed'
+                }];
+                
+                // Update UI
+                authButtons.classList.add('hidden');
+                userMenu.classList.remove('hidden');
+                usernameDisplay.textContent = userState.username;
+                gameContent.classList.remove('hidden');
+                welcomeContent.classList.add('hidden');
+                
+                updateDisplay();
+                closeModal('registerModal');
+                
+                // Initialize game if not already
+                if (gameState.roundNumber === 1) {
+                    initGame();
+                }
+            }, 500);
+        });
+
+        // Logout Function
+        function logout() {
+            userState.isAuthenticated = false;
+            authButtons.classList.remove('hidden');
+            userMenu.classList.add('hidden');
+            gameContent.classList.add('hidden');
+            welcomeContent.classList.remove('hidden');
+        }
+
+        // User Dropdown Toggle
+        userMenuButton.addEventListener('click', function() {
+            userDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('#userMenuButton') && !event.target.closest('#userMenuButton')) {
+                if (!userDropdown.classList.contains('hidden')) {
+                    userDropdown.classList.add('hidden');
+                }
+            }
+        });
+
+        // Initialize Game
+        async function initGame() {
+            await initializeProvablyFair();
+            updateDisplay();
+            updateStats();
+            simulateLiveBets();
+            
+            // Add some initial chat messages
+            setTimeout(() => addChatMessage('System', 'Welcome to ONIVATOR! Good luck!'), 1000);
+            setTimeout(() => addChatMessage('Player1', 'Ready for some big wins!'), 2000);
+            
+            // Start first round
+            setTimeout(() => {
+                startRound();
+            }, 3000);
+        }
+
+        // Start the game if user is authenticated (for page refresh)
+        if (userState.isAuthenticated) {
+            authButtons.classList.add('hidden');
+            userMenu.classList.remove('hidden');
+            usernameDisplay.textContent = userState.username;
+            gameContent.classList.remove('hidden');
+            welcomeContent.classList.add('hidden');
+            initGame();
+        }
+
+        // Responsive adjustments
+        window.addEventListener('resize', function() {
+            resetPlane();
+        });
+    </script>
 </body>
 </html>
